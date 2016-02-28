@@ -12,7 +12,7 @@ RSpec.describe Cave do
 
     it "should return the same output as supplied output file" do
       subject.simulate
-      expect(subject.output).to eq output
+      expect(subject.output).to eq output[0].chomp
     end
   end
 end
