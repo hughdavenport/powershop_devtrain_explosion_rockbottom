@@ -1,5 +1,7 @@
 class Cave
 
+  attr_reader :waterLeft
+
   def initialize(file:)
     parseFile(file)
   end
@@ -14,29 +16,87 @@ class Cave
     end
   end
 
-  def simulate
-
+  def getWaterPosition
+    return @waterPosition if @waterPosition
+    # We haven't started simulating yet, should just be one water source
+    # TODO make it harder and have multiple sources ;)
+    for row in 0..(getWidth-1) do
+      column = getRow(row).index('~')
+      if column
+        @waterPosition = {row: row, column: column}
+        break
+      end
+    end
+    @waterPosition
   end
 
-  def get_width
+  def flowUp(row)
+    return if row == 0
+    row -= 1
+    column = getRow(row).rindex('~')
+    return unless column
+    if column + 1 < getWidth && @map[row][column + 1] == ' '
+      # There is an empty place, call this the new waterPosition
+      @waterPosition = {row: row, column: column}
+    else
+      return flowUp(row)
+    end
+    @waterPosition
+  end
+
+  def simulate
+    while waterLeft > 0 do
+      waterPosition = getWaterPosition
+      p waterPosition
+      # Check whether water can flow down, then across to left, otherwise we are going up
+      row = waterPosition[:row]
+      column = waterPosition[:column]
+      if row + 1 < getHeight && @map[row + 1][column] == ' '
+        puts "Moving down"
+        # Square below us is empty
+        row += 1
+      elsif column + 1 < getWidth && @map[row][column + 1] == ' '
+        puts "Moving left"
+        # Square to left of us is empty
+        column += 1 
+      else
+        puts "Trying to flow up"
+        # Try flow up, otherwise fall through
+        if flowUp(row)
+          next
+        end
+      end
+
+      if waterPosition[:row] == row && waterPosition[:column] == column
+        # No change, stop simulation
+        break
+      else
+        @waterPosition = {row: row, column: column}
+        @map[row][column] = '~' 
+        @waterLeft -= 1
+      end
+    end
+  end
+
+  def getWidth
     @map[0].length
   end
 
-  def get_height
+  def getHeight
     @map.length
   end
 
-  def get_row(row)
+  def getRow(row)
     @map[row]
   end
 
-  def get_column(column)
+  def getColumn(column)
     @map.transpose[column]
   end
 
-  def get_water_depth(column)
+  def getWaterDepth(column)
     depth = 0
-    for c in get_column(column)
+    for c in getColumn(column)
       return '~' if c == ' ' and depth > 0
       depth += 1 if c == '~'
     end
@@ -45,8 +105,8 @@ class Cave
 
   def output
     depths = []
-    for column in 0..(get_width-1) do
-      depths << get_water_depth(column)
+    for column in 0..(getWidth-1) do
+      depths << getWaterDepth(column)
     end
     depths.join(" ")
   end
