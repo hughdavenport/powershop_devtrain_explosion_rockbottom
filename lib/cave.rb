@@ -27,11 +27,11 @@ class Cave
   end
 
   def get_row(row)
-    @map[row - 1]
+    @map[row]
   end
 
   def get_column(column)
-    @map.transpose[column - 1]
+    @map.transpose[column]
   end
 
   def get_water_depth(column)
@@ -45,7 +45,7 @@ class Cave
 
   def output
     depths = []
-    for column in 1..get_width do
+    for column in 0..(get_width-1) do
       depths << get_water_depth(column)
     end
     depths.join(" ")
