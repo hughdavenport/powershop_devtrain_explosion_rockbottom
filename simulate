@@ -3,6 +3,7 @@ require_relative 'lib/cave'
 
 File.open(ARGV[0]) do |f|
   c = Cave.new(file: f)
+  c.debug = ARGV[1] if ARGV.length > 1
   c.simulate
   puts c.output
 end

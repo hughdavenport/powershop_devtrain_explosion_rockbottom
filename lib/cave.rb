@@ -1,6 +1,7 @@
 class Cave
 
   attr_reader :waterLeft
+  attr_accessor :debug
 
   def initialize(file:)
     parseFile(file)
@@ -64,21 +65,21 @@ class Cave
 
   def simulate
     while waterLeft > 0 do
-      puts self
+      puts self if debug
       waterPosition = getWaterPosition
       # Check whether water can flow down, then across to left, otherwise we are going up
       row = waterPosition[:row]
       column = waterPosition[:column]
       if row + 1 < getHeight && @map[row + 1][column] == ' '
-        puts "Moving down"
+        puts "Moving down" if debug
         # Square below us is empty
         row += 1
       elsif column + 1 < getWidth && @map[row][column + 1] == ' '
-        puts "Moving left"
+        puts "Moving left" if debug
         # Square to left of us is empty
         column += 1 
       else
-        puts "Trying to flow up"
+        puts "Trying to flow up" if debug
         # Try flow up, otherwise fall through
         if flowUp(row)
           next
