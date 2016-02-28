@@ -8,6 +8,7 @@ class Cave
 
   def parseFile(file)
     @waterLeft = file.gets.chomp.to_i
+    @waterLeft -= 1 # Start with one unit there
     # Swallow a line, not needed
     file.gets
     @map = []
@@ -20,7 +21,7 @@ class Cave
     return @waterPosition if @waterPosition
     # We haven't started simulating yet, should just be one water source
     # TODO make it harder and have multiple sources ;)
-    for row in 0..(getWidth-1) do
+    for row in 0..(getHeight-1) do
       column = getRow(row).index('~')
       if column
         @waterPosition = {row: row, column: column}
@@ -44,10 +45,27 @@ class Cave
     @waterPosition
   end
 
+  def to_s
+    str = ""
+    str << waterLeft.to_s
+    str << "\n\n"
+    waterPosition = getWaterPosition
+    for row in 0..(getHeight-1)
+      line = getRow(row)
+      if row == waterPosition[:row]
+        line = line.dup
+        line[waterPosition[:column]] = '@'
+      end
+      str << line.join
+      str << "\n"
+    end
+    str
+  end
+
   def simulate
     while waterLeft > 0 do
+      puts self
       waterPosition = getWaterPosition
-      p waterPosition
       # Check whether water can flow down, then across to left, otherwise we are going up
       row = waterPosition[:row]
       column = waterPosition[:column]
