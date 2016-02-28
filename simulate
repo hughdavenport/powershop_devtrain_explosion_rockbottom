@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+require_relative 'lib/cave'
+
+File.open(ARGV[0]) do |f|
+  c = Cave.new(file: f)
+  c.simulate
+  puts c.output
+end
