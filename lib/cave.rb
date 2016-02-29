@@ -22,9 +22,10 @@ class Cave
   def getWaterPosition
     return @waterPosition if @waterPosition
     # We haven't started simulating yet, should just be one water source
+    # Or, we are sending in partial input, which allows us to test stream
     # TODO make it harder and have multiple sources ;)
-    for row in 0..(getHeight-1) do
-      column = getRow(row).index('~')
+    for row in (getHeight-1).downto(0) do
+      column = getRow(row).rindex('~')
       if column
         @waterPosition = {row: row, column: column}
         break

@@ -51,5 +51,30 @@ RSpec.describe Cave do
         expect(subject.to_s).to eq expectedstring
       end
     end
+    context "Should only fall down" do
+      let(:teststring) {
+        ['2','',
+          "###",
+          "~~#",
+          "# #",
+          "###",
+        ].join("\n")
+      }
+      let(:expectedstring) {
+        ['1','',
+          "###",
+          "~~#",
+          "#~#",
+          "###",
+          '',
+        ].join("\n")
+      }
+      subject { Cave.new(file: StringIO.new(teststring)) }
+
+      it "should fill the gap to the bottom" do
+        subject.simulate
+        expect(subject.to_s).to eq expectedstring
+      end
+    end
   end
 end
