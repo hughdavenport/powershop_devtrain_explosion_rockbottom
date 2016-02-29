@@ -101,5 +101,55 @@ RSpec.describe Cave do
         expect(subject.to_s).to eq expectedstring
       end
     end
+    context "Can only flow up" do
+      let(:teststring) {
+        ['2','',
+          "####",
+          "~~ #",
+          "#~~#",
+          "####",
+        ].join("\n")
+      }
+      let(:startstring) {
+        ['2','',
+          "####",
+          "~~ #",
+          "#~@#", # use debugging string for water loc
+          "####",
+          '',
+        ].join("\n")
+      }
+      let(:flowstring) {
+        ['2','',
+          "####",
+          "~@ #", # use debugging string for water loc
+          "#~~#",
+          "####",
+          '',
+        ].join("\n")
+      }
+      let(:expectedstring) {
+        ['1','',
+          "####",
+          "~~@#",
+          "#~~#",
+          "####",
+          '',
+        ].join("\n")
+      }
+      subject { Cave.new(debug: true, file: StringIO.new(teststring)) }
+
+      it "should have the watersource in bottom left" do
+        expect(subject.to_s).to eq startstring
+      end
+      it "flow up should move the watersource up" do
+        subject.flowUp
+        expect(subject.to_s).to eq flowstring
+      end
+      it "should fill the last gap" do
+        subject.simulate
+        expect(subject.to_s).to eq expectedstring
+      end
+    end
   end
 end

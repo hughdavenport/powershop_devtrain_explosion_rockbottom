@@ -34,7 +34,7 @@ class Cave
     @waterPosition
   end
 
-  def flowUp(row)
+  def flowUp(row=getWaterPosition[:row])
     return if row == 0
     row -= 1
     column = getRow(row).rindex('~')
