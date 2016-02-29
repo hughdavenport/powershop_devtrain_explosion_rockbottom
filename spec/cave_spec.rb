@@ -286,6 +286,60 @@ RSpec.describe Cave do
         end
       end
     end
+    describe "Spilling evenly" do
+      context "Bottom row" do
+        let(:teststring) {
+          ['5','',
+            "###~###",
+            "#     #",
+            "#     #",
+            "#######",
+          ].join("\n")
+        }
+        let(:expectedstring) {
+          ['1','',
+            "###~###",
+            "#  ~  #",
+            "# ~~~ #",
+            "#######",
+            '',
+          ].join("\n")
+        }
+
+        subject { Cave.new(file: StringIO.new(teststring)) }
+
+        it "should flow evenly" do
+          subject.simulate
+          expect(subject.to_s).to eq expectedstring
+        end
+      end
+      context "Top row" do
+        let(:teststring) {
+          ['9','',
+            "###~###",
+            "#     #",
+            "#     #",
+            "#######",
+          ].join("\n")
+        }
+        let(:expectedstring) {
+          ['1','',
+            "###~###",
+            "# ~~~ #",
+            "#~~~~~#",
+            "#######",
+            '',
+          ].join("\n")
+        }
+
+        subject { Cave.new(file: StringIO.new(teststring)) }
+
+        it "should flow evenly" do
+          subject.simulate
+          expect(subject.to_s).to eq expectedstring
+        end
+      end
+    end
     describe "Multiple data sources" do
       context "Not overlapping" do
         let(:teststring) {

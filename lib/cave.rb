@@ -5,6 +5,7 @@ class Cave
 
   def initialize(debug: false, file:)
     self.debug = debug
+    @direction = 1
     parseFile(file)
   end
 
@@ -67,20 +68,24 @@ class Cave
       row = waterPosition[:row]
       column = waterPosition[:column]
       # OPTIONAL: move right if possible, this allows us to have underhangs, and sources not on left edge
-      skip = 0
-      skip += 1 while column - skip >= 0 && @map[row][column - skip] == '~'
+      skipadd = 0
+      skipadd += 1 while column + skipadd * @direction >= 0 && column + skipadd * @direction < getWidth && @map[row][column + skipadd * @direction] == '~'
+      skipminus = 0
+      skipminus += 1 while column - skipminus * @direction >= 0 && column - skipminus * @direction < getWidth && @map[row][column - skipminus * @direction] == '~'
       if row + 1 < getHeight && @map[row + 1][column] == ' '
         puts "Moving down" if debug
         # Square below us is empty
         row += 1
-      elsif column + 1 < getWidth && @map[row][column + 1] == ' '
-        puts "Moving left" if debug
-        # Square to left of us is empty
-        column += 1 
-      elsif column - skip - 1>= 0 && @map[row][column - skip] == ' '
-        puts "OPTIONAL: Moving *right*" if debug
-        # Some square to the right of us is empty, between us and that is just water
-        column = column - skip
+      elsif column + skipadd * @direction >= 0 && column + skipadd * @direction < getWidth && @map[row][column + skipadd * @direction] == ' '
+        puts "Moving " + (@direction > 0 ? "left" : "right") if debug
+        # Some square to the side of us is empty, between us and that is just water
+        column += skipadd * @direction
+        @direction *= -1
+      elsif column - skipminus * @direction >= 0 && column - skipminus * @direction < getWidth && @map[row][column - skipminus * @direction] == ' '
+        puts "Moving " + (@direction > 0 ? "right" : "left") if debug
+        # Some square to the side of us is empty, between us and that is just water
+        column -= skipminus * @direction
+        @direction *= -1
       else
         puts "Trying to flow up" if debug
         # Try flow up, otherwise fall through
