@@ -167,6 +167,32 @@ RSpec.describe Cave do
         expect(subject.to_s).to eq teststring
       end
     end
+  end
+  describe "Optional features" do
+# The following is out of original scope, but seemed cool
+    context "Moving to the right" do
+      let(:teststring) {
+        ['2','',
+          "###",
+          "# ~",
+          "###",
+        ].join("\n")
+      }
+      let(:expectedstring) {
+        ['1','',
+          "###",
+          "#~~",
+          "###",
+          ''
+        ].join("\n")
+      }
+      subject { Cave.new(file: StringIO.new(teststring)) }
+
+      it "should fill up to the right" do
+        subject.simulate
+        expect(subject.to_s).to eq expectedstring
+      end
+    end
     context "Underhang" do
       let(:teststring) {
         ['10','',
