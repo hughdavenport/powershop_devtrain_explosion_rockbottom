@@ -151,5 +151,21 @@ RSpec.describe Cave do
         expect(subject.to_s).to eq expectedstring
       end
     end
+    context "Overflowing" do
+      let(:teststring) {
+        ['2','',
+          "###",
+          "~~#",
+          "###",
+          '',
+        ].join("\n")
+      }
+      subject { Cave.new(file: StringIO.new(teststring)) }
+
+      it "should stop trying to fill up" do
+        subject.simulate
+        expect(subject.to_s).to eq teststring
+      end
+    end
   end
 end
