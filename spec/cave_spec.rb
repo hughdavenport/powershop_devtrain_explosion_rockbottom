@@ -220,6 +220,72 @@ RSpec.describe Cave do
         expect(subject.to_s).to eq expectedstring
       end
     end
+    describe "Underhang shelf" do
+      context "Almost filled" do
+        let(:teststring) {
+          ['9','',
+            "#####",
+            "~   #",
+            "### #",
+            "##  #",
+            "### #",
+            "##  #",
+            "#####",
+          ].join("\n")
+        }
+        let(:expectedstring) {
+          ['1', '',
+            "#####",
+            "~~~~#",
+            "###~#",
+            "## ~#",
+            "###~#",
+            "##~~#",
+            "#####",
+            '',
+          ].join("\n")
+        }
+
+        subject { Cave.new(file: StringIO.new(teststring)) }
+
+        it "should fill up all but the overhang with only 9" do
+          subject.simulate
+          expect(subject.to_s).to eq expectedstring
+        end
+      end
+      context "Filled" do
+        let(:teststring) {
+          ['10','',
+            "#####",
+            "~   #",
+            "### #",
+            "##  #",
+            "### #",
+            "##  #",
+            "#####",
+          ].join("\n")
+        }
+        let(:expectedstring) {
+          ['1', '',
+            "#####",
+            "~~~~#",
+            "###~#",
+            "##~~#",
+            "###~#",
+            "##~~#",
+            "#####",
+            '',
+          ].join("\n")
+        }
+
+        subject { Cave.new(file: StringIO.new(teststring)) }
+
+        it "should fill up all including overhang shelf" do
+          subject.simulate
+          expect(subject.to_s).to eq expectedstring
+        end
+      end
+    end
     context "Multiple data sources" do
       let(:teststring) {
         ['3','',
