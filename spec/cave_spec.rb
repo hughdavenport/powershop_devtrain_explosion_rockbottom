@@ -286,29 +286,31 @@ RSpec.describe Cave do
         end
       end
     end
-    context "Multiple data sources" do
-      let(:teststring) {
-        ['3','',
-          "###~##",
-          "~ #  #",
-          "# ####",
-          "######",
-        ].join("\n")
-      }
-      let(:expectedstring) {
-        ['1','',
-          "###~##",
-          "~~#~~#",
-          "#~####",
-          "######",
-          '',
-        ].join("\n")
-      }
-      subject { Cave.new(file: StringIO.new(teststring)) }
+    describe "Multiple data sources" do
+      context "Not overlapping" do
+        let(:teststring) {
+          ['3','',
+            "###~##",
+            "~ #  #",
+            "# ####",
+            "######",
+          ].join("\n")
+        }
+        let(:expectedstring) {
+          ['1','',
+            "###~##",
+            "~~#~~#",
+            "#~####",
+            "######",
+            '',
+          ].join("\n")
+        }
+        subject { Cave.new(file: StringIO.new(teststring)) }
 
-      it "should fill up from both sources" do
-        subject.simulate
-        expect(subject.to_s).to eq expectedstring
+        it "should fill up from both sources" do
+          subject.simulate
+          expect(subject.to_s).to eq expectedstring
+        end
       end
     end
   end
