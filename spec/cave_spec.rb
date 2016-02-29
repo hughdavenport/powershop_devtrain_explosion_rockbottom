@@ -167,5 +167,32 @@ RSpec.describe Cave do
         expect(subject.to_s).to eq teststring
       end
     end
+    context "Underhang" do
+      let(:teststring) {
+        ['10','',
+          "######",
+          "~    #",
+          "# ## #",
+          "# #  #",
+          "######",
+        ].join("\n")
+      }
+      let(:expectedstring) {
+        ['1','',
+          "######",
+          "~~~~~#",
+          "#~##~#",
+          "#~#~~#",
+          "######",
+          ''
+        ].join("\n")
+      }
+      subject { Cave.new(file: StringIO.new(teststring)) }
+
+      it "should fill up the underhang" do
+        subject.simulate
+        expect(subject.to_s).to eq expectedstring
+      end
+    end
   end
 end
