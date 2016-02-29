@@ -28,7 +28,7 @@ RSpec.describe Cave do
   end
 
   describe "Movement" do
-    context "Should only move left" do
+    context "Can only move left" do
       let(:teststring) {
         ['2','',
           "###",
@@ -51,7 +51,7 @@ RSpec.describe Cave do
         expect(subject.to_s).to eq expectedstring
       end
     end
-    context "Should only fall down" do
+    context "Can only fall down" do
       let(:teststring) {
         ['2','',
           "###",
@@ -66,6 +66,31 @@ RSpec.describe Cave do
           "~~#",
           "#~#",
           "###",
+          '',
+        ].join("\n")
+      }
+      subject { Cave.new(file: StringIO.new(teststring)) }
+
+      it "should fill the gap to the bottom" do
+        subject.simulate
+        expect(subject.to_s).to eq expectedstring
+      end
+    end
+    context "Can go left or down" do
+      let(:teststring) {
+        ['2','',
+          "####",
+          "~~ #",
+          "# ##",
+          "####",
+        ].join("\n")
+      }
+      let(:expectedstring) {
+        ['1','',
+          "####",
+          "~~ #",
+          "#~##",
+          "####",
           '',
         ].join("\n")
       }
