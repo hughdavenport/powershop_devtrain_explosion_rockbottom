@@ -35,12 +35,23 @@ class Cave
     @waterPosition
   end
 
-  def flowUp(row=getWaterPosition[:row])
+  def flowUp(row=getWaterPosition[:row], column = getWaterPosition[:column])
     return if row == 0
-    row -= 1
-    column = getRow(row).rindex('~')
-    return unless column
-    @waterPosition = {row: row, column: column}
+    # Find a connected stream from our position
+    for i in 0..(getWidth-1) do
+      if column + i < getWidth && @map[row][(column..(column + i))] == ['~'] * (i + 1) && @map[row - 1][column + i] == '~'
+        # Connected, and go up
+        # In a multisource world, we get all of these potentials, then add to list of sources
+        @waterPosition = {row: row - 1, column: column + i}
+        return @waterPosition
+      elsif column - i < getWidth && @map[row][((column - i)..column)] == ['~'] * (i + 1) && @map[row - 1][column - i] == '~'
+        # Connected, and go up
+        # In a multisource world, we get all of these potentials, then add to list of sources
+        @waterPosition = {row: row - 1, column: column - i}
+        return @waterPosition
+      end
+    end
+    nil
   end
 
   def to_s
