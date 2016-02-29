@@ -66,6 +66,9 @@ class Cave
       # Check whether water can flow down, then across to left, otherwise we are going up
       row = waterPosition[:row]
       column = waterPosition[:column]
+      # OPTIONAL: move right if possible, this allows us to have underhangs, and sources not on left edge
+      skip = 0
+      skip += 1 while column - skip >= 0 && @map[row][column - skip] == '~'
       if row + 1 < getHeight && @map[row + 1][column] == ' '
         puts "Moving down" if debug
         # Square below us is empty
@@ -74,6 +77,10 @@ class Cave
         puts "Moving left" if debug
         # Square to left of us is empty
         column += 1 
+      elsif column - skip - 1>= 0 && @map[row][column - skip] == ' '
+        puts "OPTIONAL: Moving *right*" if debug
+        # Some square to the right of us is empty, between us and that is just water
+        column = column - skip
       else
         puts "Trying to flow up" if debug
         # Try flow up, otherwise fall through
