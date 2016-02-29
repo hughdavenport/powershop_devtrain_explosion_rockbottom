@@ -3,7 +3,8 @@ class Cave
   attr_reader :waterLeft
   attr_accessor :debug
 
-  def initialize(file:)
+  def initialize(debug: false, file:)
+    self.debug = debug
     parseFile(file)
   end
 
@@ -48,12 +49,12 @@ class Cave
 
   def to_s
     str = ""
-    str << waterLeft.to_s
+    str << (waterLeft+1).to_s
     str << "\n\n"
     waterPosition = getWaterPosition
     for row in 0..(getHeight-1)
       line = getRow(row)
-      if row == waterPosition[:row]
+      if debug && row == waterPosition[:row]
         line = line.dup
         line[waterPosition[:column]] = '@'
       end
