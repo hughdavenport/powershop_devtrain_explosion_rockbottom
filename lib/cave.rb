@@ -39,13 +39,7 @@ class Cave
     row -= 1
     column = getRow(row).rindex('~')
     return unless column
-    if column + 1 < getWidth && @map[row][column + 1] == ' '
-      # There is an empty place, call this the new waterPosition
-      @waterPosition = {row: row, column: column}
-    else
-      return flowUp(row)
-    end
-    @waterPosition
+    @waterPosition = {row: row, column: column}
   end
 
   def to_s
